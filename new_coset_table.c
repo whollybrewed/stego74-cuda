@@ -1,3 +1,5 @@
+#include "new_coset_table.h"
+
 void new_coset_table(int** r_table, int** g, int* u, int r, int row)
 {
 	int* c_all = (int*)malloc(n * sizeof(int));
