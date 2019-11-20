@@ -1,5 +1,4 @@
 #include "grouping.h"
-#include "embed.h"
 
 void grouping(unsigned char entry[7], cosets sub_g[16][8])
 {
@@ -7,8 +6,8 @@ void grouping(unsigned char entry[7], cosets sub_g[16][8])
     unsigned char syndrome[3];
     u = entry[2] * 8
       + entry[4] * 4
-      + entry[7] * 2
-      + entry[8] * 1;
+      + entry[5] * 2
+      + entry[6] * 1;
 
     for (int i = 0; i < 3; i++){
         for (int j = 0; j < 7; j++){
