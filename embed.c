@@ -29,10 +29,11 @@ void embed(unsigned char *data, unsigned char *secret)
         
         for (int i = 0; i < 7; i++){
             if (sub_g[u][v].bit[i] == 1){
-                data[i + count] & 126; //0b1111110
+                data[i + count] |= 1; //0b0000001
             }
             else{
-                data[i + count] | 1; //0b0000001
+                data[i + count] &= 126; //0b1111110
+                
             }
         }
         count += 7;
