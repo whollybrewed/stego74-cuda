@@ -4,7 +4,7 @@
 void embed(unsigned char *data, unsigned char *secrets)
 {
     cosets sub_g[16][8]; 
-    unsigned char pixcel_mask = 255;
+    unsigned char pixcel_mask = 254;
     unsigned char entry[7], temp[7];
     const int num_secret = height * width - 1;
     const int remain = (height * width - 1) % 7;
