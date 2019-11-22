@@ -10,13 +10,13 @@ void grouping(unsigned char entry[7], cosets sub_g[16][8])
       + entry[6] * 1;
 
     for (int i = 0; i < 3; i++){
-        for (int j = 0; j < 7; j++){
-			if (j == 0)
-				syndrome[i] = entry[j] * matrix_h[i][j];
-			else	
-				syndrome[i] = syndrome[i] ^ (entry[j] * matrix_h[i][j]);
-		}	
-	}
+      for (int j = 0; j < 7; j++){
+        if (j == 0)
+          syndrome[i] = entry[j] * matrix_h[i][j];
+        else	
+          syndrome[i] = syndrome[i] ^ (entry[j] * matrix_h[i][j]);
+      }	
+    }
     v = syndrome[0] * 4
       + syndrome[1] * 2
       + syndrome[2] * 1;
