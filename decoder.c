@@ -2,7 +2,7 @@
   
 void decode(unsigned char *p)
 {
-        int i;
+        int i, j;
         const int num_secret = height * width - 1;
         const int num_group = (height * width - 1)/7;
         const int remain = (height * width - 1) % 7;
