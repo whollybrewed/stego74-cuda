@@ -1,5 +1,12 @@
 #include "grouping.h"
 
+unsigned char matrix_h[3][7] =
+{
+  {1, 1, 0, 1, 1, 0, 0},
+  {1, 0, 1, 1, 0, 1, 0},
+  {0, 1, 1, 1, 0, 0, 1}
+};
+
 void grouping(unsigned char entry[7], cosets sub_g[16][8])
 {
     int u, v;

@@ -1,5 +1,5 @@
 #include "embed.h"
-#include "dummy.h" // for debug purpos
+#include "grouping.h"
 
 void embed(unsigned char *data, unsigned char *secrets)
 {
@@ -29,13 +29,13 @@ void embed(unsigned char *data, unsigned char *secrets)
         v = temp[0] * 4
           + temp[1] * 2
           + temp[3] * 1;
-        
+
         for (int i = 0; i < 7; i++){
             if (sub_g[u][v].bit[i] == 1){
-                data[i + count] |= 1; //0b0000001
+                data[i + count] |= 1; //0b00000001
             }
             else{
-                data[i + count] &= 126; //0b1111110
+                data[i + count] &= 254; //0b11111110
             }
         }
         count += 7;
@@ -61,7 +61,7 @@ void embed(unsigned char *data, unsigned char *secrets)
             data[i + num_secret - remain] |= 1; //0b0000001
         }
         else{
-            data[i + num_secret - remain] &= 126; //0b1111110
+            data[i + num_secret - remain] &= 254; //0b1111110
         }
     }
     // extra n bits replace the smallest n bits of the last pixel 
