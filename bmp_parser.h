@@ -11,7 +11,7 @@ struct BmpParser {
     unsigned char *data;
 };
 
-void ReadFile(char* filename, struct BmpParser* parser);
+bool ReadFile(char* filename, struct BmpParser* parser);
 void OutputFile(char* filename, struct BmpParser* parser);
 
 #endif

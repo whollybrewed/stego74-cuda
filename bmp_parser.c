@@ -1,5 +1,5 @@
 #include "bmp_parser.h"
-void ReadFile(char* filename, struct BmpParser* parser)
+bool ReadFile(char* filename, struct BmpParser* parser)
 {
     FILE* f = fopen(filename, "rb");
     fread(parser->header, sizeof(unsigned char), 54, f); // read the 54-byte header
@@ -7,6 +7,11 @@ void ReadFile(char* filename, struct BmpParser* parser)
     parser->width = *(int*)&parser->header[18];
     parser->height = *(int*)&parser->header[22];
     int plane = *(int*)&parser->header[28];
+    int compress = *(int*)&parser->header[30];
+    if (compress) {
+        printf("Compress!! Can not encode\n\n");
+        return 0;
+    }
     printf("offset = %d, w = %d, h = %d, p = %d\n", data_offset, parser->width, parser->height, plane);
     parser->palette_size = data_offset-54;
     if ( parser->palette_size ) {
@@ -19,7 +24,7 @@ void ReadFile(char* filename, struct BmpParser* parser)
     parser->data = (unsigned char*) malloc(size*sizeof(unsigned char)); 
     fread(parser->data, sizeof(unsigned char), size, f); // read the rest of the data at once
     fclose(f);
-
+    return 1;
     /*for(int i = 0; i < size; ++i)
     {
         if ( parser->data[i] > 250 )
