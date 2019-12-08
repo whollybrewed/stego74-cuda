@@ -1,7 +1,7 @@
 #include "embed.h"
 #include "grouping.h"
 
-void StringToBits(char* string, char* bits)
+void StringToBits(unsigned char* string, unsigned char* bits)
 {
     for (int n = 0; n < strlen(string); n++){
         int tmp = string[n];
