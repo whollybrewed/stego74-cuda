@@ -2,14 +2,18 @@
   
 void decode(unsigned char *p)
 {
-        int i;
+        int i,j;
         const int num_secret = height * width - 1;
         const int num_group = (height * width - 1)/7;
         const int remain = (height * width - 1) % 7;
         //int p[7]={14,14,13,13,14,15,15};  //pixels
         unsigned char l[num_secret-remain+7];  //LSB
         unsigned char s[num_secret-remain+7];  //secret bits
-        unsigned char z[num_group*3+3] = {0};  //syndrome
+        unsigned char z[num_group*3+3];  //syndrome
+		// initialize z to 0
+		for(i=0; i<num_group*3+3; i++)
+			z[i] = 0;
+        
         for(i=0; i<num_secret-remain; i++)
                 l[i] = p[i]&1;
         //HxL=z
@@ -48,5 +52,5 @@ void decode(unsigned char *p)
                 s[num_group*7+5] = l[num_group*7+5];
                 s[num_group*7+6] = l[num_group*7+6];
         }
-        return 0;
+        return;
 }

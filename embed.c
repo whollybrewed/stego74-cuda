@@ -1,13 +1,38 @@
 #include "embed.h"
 #include "grouping.h"
 
+char* StringToBits(char* string)
+{
+    //printf("In %d\n",strlen(string));
+    char bits[strlen(string)*8];
+    for (int n = 0; n < strlen(string); n++){
+        int tmp = string[n];
+        //printf("%c\n",string[n]);
+        for (int j = 7; j >= 0; j--){
+            //printf("tmp %d\n",tmp);
+            bits[8*n+j] = tmp%2;
+            tmp = tmp >> 1;
+        }
+    }
+    // printf("after\n");
+    // for(int n = 0; n < strlen(string)*8; n++) {
+    //     printf("%d",bits[n]);
+    //     if(n%8==7)
+    //         printf("\n");
+    // }
+    // printf("\n");
+    return bits;
+}
+
 void embed(unsigned char *data, unsigned char *secrets)
 {
     cosets sub_g[16][8]; 
     unsigned char pixcel_mask = 254;
     unsigned char entry[7], temp[7];
-    const int num_secret = height * width - 1;
-    const int remain = (height * width - 1) % 7;
+    //const int num_secret = height * width - 1;
+    const int num_secret = strlen(secrets);
+    printf("lens: %d\n",num_secret);
+    const int remain = (num_secret) % 7;
     int u, v, count = 0;
     // all possible codewords
     for (int i = 0; i < 128; i++){
@@ -17,7 +42,9 @@ void embed(unsigned char *data, unsigned char *secrets)
         }
         grouping(entry, sub_g);
     }
+    printf("after grouping\n");
     while (count < num_secret - remain){
+        printf("count = %d\n",count);
         for (int i = 0; i < 7; i++){
             temp[i] = secrets[i + count];   
         }
@@ -29,7 +56,7 @@ void embed(unsigned char *data, unsigned char *secrets)
         v = temp[0] * 4
           + temp[1] * 2
           + temp[3] * 1;
-
+        printf("u: %d, v: %d\n",u,v);
         for (int i = 0; i < 7; i++){
             if (sub_g[u][v].bit[i] == 1){
                 data[i + count] |= 1; //0b00000001
@@ -40,6 +67,7 @@ void embed(unsigned char *data, unsigned char *secrets)
         }
         count += 7;
     }
+    printf("after first encode\n");
     // dealing with the remainder secrect bits
     for (int i = 0; i < 7; i++){
         temp[i] = 0;
@@ -64,6 +92,7 @@ void embed(unsigned char *data, unsigned char *secrets)
             data[i + num_secret - remain] &= 254; //0b1111110
         }
     }
+    printf("after last encode\n");
     // extra n bits replace the smallest n bits of the last pixel 
     for (int i = remain; i < 7; i++){
         pixcel_mask |= sub_g[u][v].bit[i];

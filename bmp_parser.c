@@ -1,5 +1,5 @@
 #include "bmp_parser.h"
-bool ReadFile(char* filename, struct BmpParser* parser)
+int ReadFile(char* filename, struct BmpParser* parser)
 {
     FILE* f = fopen(filename, "rb");
     fread(parser->header, sizeof(unsigned char), 54, f); // read the 54-byte header
