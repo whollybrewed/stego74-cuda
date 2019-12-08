@@ -9,5 +9,5 @@
 typedef struct subgroup{ unsigned char bit[7]; }cosets;
 
 void embed(unsigned char *data, unsigned char *secret);
-char* StringToBits(char* string);
+void StringToBits(char* string, char* bits);
 #endif

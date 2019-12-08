@@ -1,15 +1,11 @@
 #include "embed.h"
 #include "grouping.h"
 
-char* StringToBits(char* string)
+void StringToBits(char* string, char* bits)
 {
-    //printf("In %d\n",strlen(string));
-    char bits[strlen(string)*8];
     for (int n = 0; n < strlen(string); n++){
         int tmp = string[n];
-        //printf("%c\n",string[n]);
         for (int j = 7; j >= 0; j--){
-            //printf("tmp %d\n",tmp);
             bits[8*n+j] = tmp%2;
             tmp = tmp >> 1;
         }
@@ -21,7 +17,6 @@ char* StringToBits(char* string)
     //         printf("\n");
     // }
     // printf("\n");
-    return bits;
 }
 
 void embed(unsigned char *data, unsigned char *secrets)
