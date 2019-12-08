@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     struct BmpParser encoder;
     ReadFile("photo/fluit.bmp", &encoder);
     // stego encoder
-    char* string = "ok";
+    char* string = "I am a handsome boy, but i don't have girlfriend. would you please be my wife?";
     char* bits = (char*)malloc(strlen(string)*8*sizeof(char));
     StringToBits(string, bits);
     printf("after\n");
@@ -20,7 +20,16 @@ int main(int argc, char* argv[])
             printf("\n");
     }
     printf("\n");
-    //embed(encoder.data, "Hello world, I am a handsome guy");
+    for(int n = 0; n < 10; n++) {
+        printf("%d ",encoder.data[n]);
+    }
+    printf("\n");
+    embed(encoder.data, encoder.data_size, bits, strlen(string)*8);
+    for(int n = 0; n < 10; n++) {
+        printf("%d ",encoder.data[n]);
+    }
+    printf("\n");
+    OutputFile("photo/encode.png", &encoder);
     // stego decoder
     return 0;
 }

@@ -19,14 +19,12 @@ void StringToBits(char* string, char* bits)
     // printf("\n");
 }
 
-void embed(unsigned char *data, unsigned char *secrets)
+void embed(unsigned char *data, const int data_size, unsigned char *secret, const int num_secret)
 {
     cosets sub_g[16][8]; 
     unsigned char pixcel_mask = 254;
     unsigned char entry[7], temp[7];
     //const int num_secret = height * width - 1;
-    const int num_secret = strlen(secrets);
-    printf("lens: %d\n",num_secret);
     const int remain = (num_secret) % 7;
     int u, v, count = 0;
     // all possible codewords
@@ -39,7 +37,6 @@ void embed(unsigned char *data, unsigned char *secrets)
     }
     printf("after grouping\n");
     while (count < num_secret - remain){
-        printf("count = %d\n",count);
         for (int i = 0; i < 7; i++){
             temp[i] = secrets[i + count];   
         }
@@ -51,7 +48,6 @@ void embed(unsigned char *data, unsigned char *secrets)
         v = temp[0] * 4
           + temp[1] * 2
           + temp[3] * 1;
-        printf("u: %d, v: %d\n",u,v);
         for (int i = 0; i < 7; i++){
             if (sub_g[u][v].bit[i] == 1){
                 data[i + count] |= 1; //0b00000001
