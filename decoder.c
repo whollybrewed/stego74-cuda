@@ -56,7 +56,7 @@ void decode(unsigned char *p, const int secret_size)
     BitsToString(s, secret_size, message);
     message[secret_size/8] = '\0';
     printf("message = %s\n", message);
-    free(message);
+    //free(message);
     return;
 }
 
