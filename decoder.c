@@ -6,7 +6,6 @@ void decode(unsigned char *p, const int secret_size)
     const int num_secret = secret_size;
     const int num_group = secret_size/7;
     const int remain = secret_size % 7;
-    //int p[7]={14,14,13,13,14,15,15};  //pixels
     unsigned char l[num_secret-remain+7];  //LSB
     unsigned char s[num_secret-remain+7];  //secret bits
     unsigned char z[num_group*3+3];  //syndrome
@@ -15,9 +14,7 @@ void decode(unsigned char *p, const int secret_size)
 		z[i] = 0;
     
     for(i=0; i<num_secret-remain; i++) {
-        //printf("%d ",p[i]);
         l[i] = p[i]&1;
-        //printf("%d\n",l[i]);
     }
     //HxL=z
     for(j=0; j<num_group; j++){
@@ -55,15 +52,8 @@ void decode(unsigned char *p, const int secret_size)
         s[num_group*7+5] = l[num_group*7+5];
         s[num_group*7+6] = l[num_group*7+6];
     }
-    printf("in after\n");
-    printf("%d\n",secret_size);
     char* message = (char*)malloc((secret_size/8)*sizeof(char)+1);
-    for(int n=0; n<50; n++) {
-        printf("%d ",s[n]);
-    }
-    printf("\n");
     BitsToString(s, secret_size, message);
-    printf("string after\n");
     message[secret_size/8] = '\0';
     printf("message = %s\n", message);
     free(message);

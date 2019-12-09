@@ -19,7 +19,7 @@ void StringToBits(unsigned char* string, unsigned char* bits)
     // printf("\n");
 }
 
-void embed(unsigned char *data, const int data_size, unsigned char *secret, const int num_secret)
+void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret)
 {
     cosets sub_g[16][8]; 
     unsigned char pixcel_mask = 254;
@@ -35,7 +35,6 @@ void embed(unsigned char *data, const int data_size, unsigned char *secret, cons
         }
         grouping(entry, sub_g);
     }
-    printf("after grouping\n");
     while (count < num_secret - remain){
         for (int i = 0; i < 7; i++){
             temp[i] = secrets[i + count];   
@@ -50,15 +49,14 @@ void embed(unsigned char *data, const int data_size, unsigned char *secret, cons
           + temp[3] * 1;
         for (int i = 0; i < 7; i++){
             if (sub_g[u][v].bit[i] == 1){
-                data[i + count] |= 1; //0b00000001
+                data[i + count] |= (unsigned char)1; //0b00000001
             }
             else{
-                data[i + count] &= 254; //0b11111110
+                data[i + count] &= (unsigned char)254; //0b11111110
             }
         }
         count += 7;
     }
-    printf("after first encode\n");
     // dealing with the remainder secrect bits
     for (int i = 0; i < 7; i++){
         temp[i] = 0;
@@ -77,13 +75,12 @@ void embed(unsigned char *data, const int data_size, unsigned char *secret, cons
 
     for (int i = 0; i < remain; i++){
         if (sub_g[u][v].bit[i] == 1){
-            data[i + num_secret - remain] |= 1; //0b0000001
+            data[i + num_secret - remain] |= (unsigned char)1; //0b0000001
         }
         else{
-            data[i + num_secret - remain] &= 254; //0b1111110
+            data[i + num_secret - remain] &= (unsigned char)254; //0b1111110
         }
     }
-    printf("after last encode\n");
     // extra n bits replace the smallest n bits of the last pixel 
     for (int i = remain; i < 7; i++){
         pixcel_mask |= sub_g[u][v].bit[i];

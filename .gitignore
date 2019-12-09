@@ -333,3 +333,10 @@ ASALocalRun/
 *.stackdump
 *.exe
 *.png
+photo/black.bmp
+photo/encode.bmp
+photo/red.bmp
+photo/story.bmp
+photo/test.bmp
+photo/white.bmp
+photo/white24.bmp
