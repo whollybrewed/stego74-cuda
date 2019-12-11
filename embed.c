@@ -4,7 +4,8 @@
 void embed(unsigned char *data, unsigned char *secrets)
 {
     cosets sub_g[16][8]; 
-    unsigned char pixcel_mask = 254;
+    unsigned char pixcel_mask = 0;
+    unsigned char data_mask = 255;
     unsigned char entry[7], temp[7];
     const int num_secret = height * width - 1;
     const int remain = (height * width - 1) % 7;
@@ -55,7 +56,7 @@ void embed(unsigned char *data, unsigned char *secrets)
     v = temp[0] * 4
       + temp[1] * 2
       + temp[3] * 1;
-
+      
     for (int i = 0; i < remain; i++){
         if (sub_g[u][v].bit[i] == 1){
             data[i + num_secret - remain] |= 1; //0b0000001
@@ -67,7 +68,11 @@ void embed(unsigned char *data, unsigned char *secrets)
     // extra n bits replace the smallest n bits of the last pixel 
     for (int i = remain; i < 7; i++){
         pixcel_mask |= sub_g[u][v].bit[i];
-        pixcel_mask <<= 1;
+        if (i < 6){
+            pixcel_mask <<= 1;
+        }
+        data_mask <<= 1;
     }
-    data[num_secret + 1] &= pixcel_mask;
+    data[num_secret] &= data_mask;
+    data[num_secret] |= pixcel_mask;
 }
