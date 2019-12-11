@@ -12,7 +12,7 @@ void decode(unsigned char *p)
         unsigned char z[num_group*3+3];  //syndrome
         for(i=0; i<num_group*3+3; i++)
                 z[i] = 0;
-        for(i=0; i<num_secret-remain; i++)
+        for(i=0; i<num_secret-1; i++)
                 l[i] = p[i]&1;
         //HxL=z
         for(j=0; j<num_group; j++){
@@ -33,7 +33,7 @@ void decode(unsigned char *p)
         }
         //deal with the remainder
         if(remain>0){
-                for(j=num_secret-remain+6; j>=num_secret-remain; j--){
+                for(j=num_secret-remain+6; j>=num_secret-1; j--){
                         l[j] = p[num_secret-1]&1;
                         p[num_secret-1] = p[num_secret-1]>>1;
                 }
