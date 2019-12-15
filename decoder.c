@@ -60,18 +60,3 @@ void decode(unsigned char *p, const int secret_size)
     return;
 }
 
-void BitsToString(unsigned char* bits, int bits_size, unsigned char* string)
-{
-    for(int n=0; n<bits_size; n++) {
-        string[n] = 0;
-        // for (int j = 0; j < 8; j++)
-        //     printf("%d",bits[8*n+j]);
-        // printf("\n");
-        for (int j = 0; j < 8; j++){
-            string[n] += bits[8*n+j];
-            if(j != 7)
-                string[n] = string[n] << 1;
-            //printf("%d ",string[n]);
-        }
-    }
-}
