@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
     // bmp reader
     struct BmpParser encoder;
-    ReadFile("photo/fluit.bmp", &encoder);
+    ReadFile("photo/fruit.bmp", &encoder);
     
     // stego encoder
     unsigned char* string = "Last Christmas, I gave you my heart But the very next day you gave it away This year, to save me from tears I'll give it to someone special";
