@@ -1,7 +1,6 @@
 #include "embed.h"
 #include "grouping.h"
 
-
 void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret)
 {
     cosets sub_g[16][8]; 
