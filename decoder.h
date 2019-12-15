@@ -1,5 +1,9 @@
-#include "grouping.h"
+#ifndef DECODER_H
+#define DECODER_H
+
 #include "convert.h"
+#include "grouping.h"
 
 void decode(unsigned char *p, const int secret_size);
-void BitsToString(unsigned char* bits, int bits_size, unsigned char* string);
+
+#endif
