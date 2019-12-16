@@ -8,7 +8,7 @@ void embed(unsigned char *data, const int data_size, unsigned char *secrets, con
     unsigned char data_mask = 255;
     unsigned char entry[7], temp[7];
     //const int num_secret = height * width - 1;
-    const int remain = (num_secret) % 7;
+    const uint8_t remain = (num_secret) % 7;
     uint8_t u, v; 
     int count = 0;
     // all possible codewords
