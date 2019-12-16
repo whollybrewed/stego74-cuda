@@ -2,6 +2,7 @@
 #define GROUPING_H
 
 #include <stdlib.h>
+#include <stdint.h>
 #include "embed.h"
 
 /*
