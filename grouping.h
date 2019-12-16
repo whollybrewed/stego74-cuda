@@ -19,6 +19,6 @@
 
 unsigned char matrix_h[3][7];
 
-void grouping(unsigned char entry[7] cosets sub_g[16][8]);
+void grouping(unsigned char entry[7], cosets sub_g[16][8]);
 
 #endif

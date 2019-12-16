@@ -1,6 +1,6 @@
 #include "grouping.h"
 
-const unsigned char matrix_h[3][7] =
+unsigned char matrix_h[3][7] =
 {
   {1, 1, 0, 1, 1, 0, 0},
   {1, 0, 1, 1, 0, 1, 0},
