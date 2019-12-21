@@ -22,8 +22,6 @@ void decode(unsigned char *p, const int secret_size)
                         s[j*7+1] = s[j*7+1]^(matrix_h[1][i]*l[j*7+i]);
                         s[j*7+3] = s[j*7+3]^(matrix_h[2][i]*l[j*7+i]);
                 }
-        }
-        for(j=0; j<num_group; j++){
                 s[j*7+2] = l[j*7+2];
                 s[j*7+4] = l[j*7+4];
                 s[j*7+5] = l[j*7+5];
