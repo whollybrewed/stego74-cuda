@@ -4,6 +4,6 @@
 #include "convert.h"
 #include "grouping.h"
 
-void decode(unsigned char *p, const int secret_size);
+void decode(unsigned char *p, const int secret_size, char* message);
 
 #endif

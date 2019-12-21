@@ -40,20 +40,24 @@ void OutputFile(char* filename, struct BmpParser* parser)
 
 void ReadTxt(char* filename, unsigned char* string, int size) 
 {
-    unsigned char c;
     unsigned char tmp[10000];
     string[0] = '\0';
     FILE *file;
     file = fopen(filename, "r");
     if (file) {
-        int count = 0;
         while (fgets(tmp, size, file) != NULL) {
             strncat(string,tmp,10000);
         }
         fclose(file);
     }
-    
-    // printf("\n\n\n%s\n\n\n", string);
-    // int a;
-    // scanf("%d",&a);
+}
+
+void OutputTxt(char* filename, unsigned char* string)
+{
+    FILE *file;
+    file = fopen(filename, "w");
+    if (file) {
+        fputs(string, file);
+        fclose(file);
+    }
 }

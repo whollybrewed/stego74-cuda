@@ -2,7 +2,7 @@
 #include "convert.h"
 #include "grouping.h"
   
-void decode(unsigned char *p, const int secret_size)
+void decode(unsigned char *p, const int secret_size, char* message)
 {
         int i, j;
         const int num_secret = secret_size;
@@ -52,8 +52,6 @@ void decode(unsigned char *p, const int secret_size)
                 s[num_group*7+5] = l[num_group*7+5];
                 s[num_group*7+6] = l[num_group*7+6];
         }
-    char* message = (char*)malloc((secret_size/8)*sizeof(char)+1);
     BitsToString(s, secret_size/8+1, message);
     message[secret_size/8] = '\0';
-    printf("message = %s\n", message);
 }
