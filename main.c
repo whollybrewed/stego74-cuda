@@ -30,6 +30,9 @@ int main(int argc, char* argv[])
     char* message = (char*)malloc((secret_size/8)*sizeof(char)+1);
     decode(decoder.data, secret_size, message);
     printf("message = %s\n", message);
+
+    // output txt file
+    OutputTxt("message.txt", message);
     free(message);
     return 0;
 }
