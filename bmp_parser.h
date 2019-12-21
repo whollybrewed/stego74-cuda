@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct BmpParser {
     int width, height, data_size, palette_size;
@@ -13,5 +14,7 @@ struct BmpParser {
 
 int ReadFile(char* filename, struct BmpParser* parser);
 void OutputFile(char* filename, struct BmpParser* parser);
+void ReadTxt(char* filename, unsigned char* string, int size);
+void OutputTxt(char* filename, unsigned char* string);
 
 #endif

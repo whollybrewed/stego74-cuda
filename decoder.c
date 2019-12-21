@@ -53,7 +53,7 @@ void decode(unsigned char *p, const int secret_size)
                 s[num_group*7+6] = l[num_group*7+6];
         }
     char* message = (char*)malloc((secret_size/8)*sizeof(char)+1);
-    BitsToString(s, secret_size, message);
+    BitsToString(s, secret_size/8+1, message);
     message[secret_size/8] = '\0';
     printf("message = %s\n", message);
 }

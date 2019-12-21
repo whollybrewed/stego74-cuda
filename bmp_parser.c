@@ -25,12 +25,8 @@ int ReadFile(char* filename, struct BmpParser* parser)
     fread(parser->data, sizeof(unsigned char), size, f); // read the rest of the data at once
     fclose(f);
     return 1;
-    /*for(int i = 0; i < size; ++i)
-    {
-        if ( parser->data[i] > 250 )
-            parser->data[i] = 230;
-    }*/
 }
+
 void OutputFile(char* filename, struct BmpParser* parser)
 {
     FILE* f = fopen(filename, "wb");
@@ -40,4 +36,24 @@ void OutputFile(char* filename, struct BmpParser* parser)
     }
     fwrite(parser->data, sizeof(unsigned char), parser->data_size, f);
     fclose(f);
+}
+
+void ReadTxt(char* filename, unsigned char* string, int size) 
+{
+    unsigned char c;
+    unsigned char tmp[10000];
+    string[0] = '\0';
+    FILE *file;
+    file = fopen(filename, "r");
+    if (file) {
+        int count = 0;
+        while (fgets(tmp, size, file) != NULL) {
+            strncat(string,tmp,10000);
+        }
+        fclose(file);
+    }
+    
+    // printf("\n\n\n%s\n\n\n", string);
+    // int a;
+    // scanf("%d",&a);
 }
