@@ -4,6 +4,12 @@
   
 void decode(unsigned char *p, const int secret_size, char* message)
 {
+        unsigned char matrix_h[3][7] =
+        {
+                {1, 1, 0, 1, 1, 0, 0},
+                {1, 0, 1, 1, 0, 1, 0},
+                {0, 1, 1, 1, 0, 0, 1}
+        };
         int i, j;
         const int num_secret = secret_size;
         const int num_group = (secret_size)/7;
