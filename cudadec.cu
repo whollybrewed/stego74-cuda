@@ -7,24 +7,24 @@
 
 __global__ void decodekernel(unsigned char *dp, unsigned char *dl,unsigned char *ds)
 {
-        unsigned char matrix_h2[3][7] =
+        unsigned char matrix_h[3][7] =
         {
          {1, 1, 0, 1, 1, 0, 0},
          {1, 0, 1, 1, 0, 1, 0},
          {0, 1, 1, 1, 0, 0, 1}
         };
         int i;
-        //int tx = blockIdx.x*blockDim.x+threadIdx.x;
-        int tx = threadIdx.x;
+        int tx = blockIdx.x*blockDim.x+threadIdx.x;
+        //int tx = threadIdx.x;
         //for(j=0; j<num_group; j++){
                 ds[tx*7] = 0;
                 ds[tx*7+1] = 0;
                 ds[tx*7+3] = 0;
                 for(i=0; i<7; i++){
                         dl[tx*7+i] = dp[tx*7+i]&1;
-                        ds[tx*7] = ds[tx*7]^(matrix_h2[0][i]*dl[tx*7+i]);
-                        ds[tx*7+1] = ds[tx*7+1]^(matrix_h2[1][i]*dl[tx*7+i]);
-                        ds[tx*7+3] = ds[tx*7+3]^(matrix_h2[2][i]*dl[tx*7+i]);
+                        ds[tx*7] = ds[tx*7]^(matrix_h[0][i]*dl[tx*7+i]);
+                        ds[tx*7+1] = ds[tx*7+1]^(matrix_h[1][i]*dl[tx*7+i]);
+                        ds[tx*7+3] = ds[tx*7+3]^(matrix_h[2][i]*dl[tx*7+i]);
                 }
                 ds[tx*7+2] = dl[tx*7+2];
                 ds[tx*7+4] = dl[tx*7+4];
@@ -43,16 +43,16 @@ void decode(unsigned char *p, const int secret_size, char* message)
         unsigned char l[num_secret-remain+7];  //LSB
         unsigned char s[num_secret-remain+7];  //secret bits
         int size = num_group*7*sizeof(unsigned char);
-        //int tilewid = 7;
+        int tilewid = 7;
         unsigned char *dp, *dl, *ds;
         cudaMalloc(&dp, size);
         cudaMemcpy(dp, p, size, cudaMemcpyHostToDevice);
         cudaMalloc(&dl, size);
         cudaMemcpy(dl, l, size, cudaMemcpyHostToDevice);
         cudaMalloc(&ds, size);
-        //dim3 dimBlock(tilewid);
-        //dim3 dimGrid(num_group/tilewid);
-        decodekernel<<<1, num_group>>>(dp, dl, ds);
+        dim3 dimBlock(tilewid);
+        dim3 dimGrid(num_group/tilewid);
+        decodekernel<<<dimGrid, dimBlock>>>(dp, dl, ds);
         printf("Printing final results...\n");
         cudaMemcpy(s, ds, size, cudaMemcpyDeviceToHost);
         //for(i=0;i<size;i++)
