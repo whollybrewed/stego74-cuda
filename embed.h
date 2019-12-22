@@ -8,6 +8,6 @@
 
 typedef struct subgroup{ unsigned char bit[7]; }cosets;
 
-void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret);
+void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* temp_sub_g);
 
 #endif

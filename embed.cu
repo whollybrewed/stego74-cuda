@@ -1,24 +1,26 @@
 #include "embed.h"
 #include "grouping.h"
 
-void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret)
+void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* temp_sub_g)
 {
     cosets sub_g[16][8]; 
+
+    for (int i = 0; i < 16; i++){
+        for (int j = 0; j < 8; j++){
+            for (int k = 0; k < 7; k++){
+                sub_g[i][j].bit[k] = temp_sub_g[i * 8 + j].bit[k];
+            }
+        }
+    }
+
     unsigned char pixcel_mask = 0;
     unsigned char data_mask = 255;
-    unsigned char entry[7], temp[7];
+    unsigned char temp[7];
     //const int num_secret = height * width - 1;
     const uint8_t remain = (num_secret) % 7;
     uint8_t u, v; 
     int count = 0;
-    // all possible codewords
-    for (uint8_t i = 0; i < 128; i++){
-        for (uint8_t j = 0; j < 7; j++){
-            // store the decimal value in the binary format of one bit per entry
-            entry[j] = (((i >> j) & 1) == 0 ? 0 : 1);
-        }
-        grouping(entry, sub_g);
-    }
+
     while (count < num_secret - remain){
         for (uint8_t i = 0; i < 7; i++){
             temp[i] = secrets[i + count];   

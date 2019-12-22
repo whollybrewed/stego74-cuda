@@ -18,7 +18,21 @@ int main(int argc, char* argv[])
     // stego encoder
     unsigned char* bits = (unsigned char*)malloc(secret_size*sizeof(unsigned char));
     StringToBits(string, bits);
-    embed(encoder.data, encoder.data_size, bits, secret_size);
+
+    //debug purpose
+    cosets temp_sub_g[16 * 8];
+
+    cosets *d_sub_g;
+    dim3 BlockSize(128);
+    dim3 GridSize(1);
+    int sub_g_size = 128 * sizeof(cosets);
+    cudaMalloc((void**)&d_sub_g, sub_g_size);
+    texture <cosets, 1, cudaReadModeElementType> d_tex;
+    grouping<<<GridSize, BlockSize>>>(d_sub_g);
+    cudaMemcpy(temp_sub_g, d_sub_g, sub_g_size, cudaMemcpyDeviceToHost);
+    cudaBindTexture(0, d_tex, d_sub_g, sub_g_size);
+
+    embed(encoder.data, encoder.data_size, bits, secret_size, temp_sub_g);
     printf("\nAfter encode\n");
     OutputFile("photo/encode.bmp", &encoder);
     free(bits);
