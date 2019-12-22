@@ -14,7 +14,7 @@ struct BmpParser {
 
 int ReadFile(char* filename, struct BmpParser* parser);
 void OutputFile(char* filename, struct BmpParser* parser);
-void ReadTxt(char* filename, unsigned char* string, int size);
-void OutputTxt(char* filename, unsigned char* string);
+void ReadTxt(char* filename, char* string, int size);
+void OutputTxt(char* filename, char* string);
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <string.h>
 //decode
-void BitsToString(unsigned char* bits, int bits_size, unsigned char* string);
+void BitsToString(unsigned char* bits, int bits_size, char* string);
 //encode
-void StringToBits(unsigned char* string, unsigned char* bits);
+void StringToBits(char* string, unsigned char* bits);
 #endif

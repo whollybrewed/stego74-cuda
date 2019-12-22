@@ -1,6 +1,6 @@
 #include "convert.h"
 
-void BitsToString(unsigned char* bits, int bits_size, unsigned char* string)
+void BitsToString(unsigned char* bits, int bits_size, char* string)
 {
     for(int n=0; n<bits_size; n++) {
         string[n] = 0;
@@ -12,7 +12,7 @@ void BitsToString(unsigned char* bits, int bits_size, unsigned char* string)
     }
 }
 
-void StringToBits(unsigned char* string, unsigned char* bits)
+void StringToBits(char* string, unsigned char* bits)
 {
     for (int n = 0; n < strlen(string); n++){
         int tmp = string[n];

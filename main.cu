@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     
     // read message from txt file
     int secret_size = (encoder.width*encoder.height-1)*8;
-    unsigned char* string = (unsigned char*)malloc((encoder.width*encoder.height-1)*sizeof(unsigned char)+1);
+    char* string = (char*)malloc((encoder.width*encoder.height-1)*sizeof(unsigned char)+1);
     ReadTxt(argv[1], string, encoder.width*encoder.height-1);
 
     // stego encoder

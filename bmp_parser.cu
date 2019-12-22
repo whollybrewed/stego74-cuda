@@ -38,9 +38,9 @@ void OutputFile(char* filename, struct BmpParser* parser)
     fclose(f);
 }
 
-void ReadTxt(char* filename, unsigned char* string, int size) 
+void ReadTxt(char* filename, char* string, int size) 
 {
-    unsigned char tmp[10000];
+    char tmp[10000];
     string[0] = '\0';
     FILE *file;
     file = fopen(filename, "r");
@@ -52,7 +52,7 @@ void ReadTxt(char* filename, unsigned char* string, int size)
     }
 }
 
-void OutputTxt(char* filename, unsigned char* string)
+void OutputTxt(char* filename, char* string)
 {
     FILE *file;
     file = fopen(filename, "w");
