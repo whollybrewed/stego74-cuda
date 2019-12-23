@@ -3,36 +3,43 @@
 
 __global__ void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* sub_g, int start)
 {
-    printf("hello\n");
-    unsigned char temp[7];
-    uint8_t u=0, v=0; 
+    __shared__ unsigned char temp[32][7];
+    int u=0, v=0; 
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-    int count = start+threadId/7;
-    int start_pos = start + threadId;
+    int start_pos = start + (threadId/7)*7;
     int stride = blockDim.x * gridDim.x;
-    printf("hello3\n");
+    //printf("%d %d %d\n", threadId, u, v);
     for (int n=0; n < num_secret/stride; n++) {
-	uint8_t i = threadId%7;
-        temp[i] = secrets[count+i];   
+	int i = threadId%7;
+        temp[threadId/7][i] = secrets[start_pos+i];   
 	__syncthreads();
-        u = temp[2] * 8
-          + temp[4] * 4
-          + temp[5] * 2
-          + temp[6] * 1;
+        u = temp[threadId/7][2] * 8
+          + temp[threadId/7][4] * 4
+          + temp[threadId/7][5] * 2
+          + temp[threadId/7][6] * 1;
           
-        v = temp[0] * 4
-          + temp[1] * 2
-          + temp[3] * 1;
-    	printf("hello2\n");
-        if (sub_g[u*8+v].bit[i] == 1){
+        v = temp[threadId/7][0] * 4
+          + temp[threadId/7][1] * 2
+          + temp[threadId/7][3] * 1;
+        if(n==0 && threadId == 0) {
+	    for(int n = 0;n<7;n++)
+	    	printf("%d ",data[n]);
+	    printf("\n");
+	}
+	if (sub_g[u*8+v].bit[i] == 1){
             data[i + start_pos] |= (unsigned char)1; //0b00000001
         }
         else{
             data[i + start_pos] &= (unsigned char)254; //0b11111110
         }
+	__syncthreads();
+	if(n==0 && threadId == 0) {
+	    for(int n = 0;n<7;n++)
+	    	printf("%d ",data[n]);
+	    printf("\n");
+	}
         start_pos += stride;
     }
-    printf("%d %d %d\n", threadId, u, v);
 }
 
 __host__ void remain_embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* sub_g)

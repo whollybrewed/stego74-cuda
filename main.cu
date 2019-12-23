@@ -37,17 +37,24 @@ int main(int argc, char* argv[])
     dim3 dimGrid(secret_size/tile_width);
     cudaMalloc((void**)&data_cu, secret_size+1);
     cudaMalloc((void**)&secret_cu, secret_size);
-    cudaMemcpy(data_cu, encoder.data, encoder.data_size, cudaMemcpyHostToDevice);
+    printf("size: %d\n",encoder.width*encoder.height);
+    cudaMemcpy(data_cu, encoder.data, encoder.width*encoder.height, cudaMemcpyHostToDevice);
     cudaMemcpy(secret_cu, bits, secret_size, cudaMemcpyHostToDevice);
     cudaStream_t stream1, stream2;
     //cudaStreamCreate(&stream1);
     //cudaStreamCreate(&stream2);
     //embed<<<dimGrid, dimBlock, 0, stream1>>> (encoder.data, encoder.data_size, bits, secret_size-remain-b_remain, d_sub_g, 0);
-    //embed<<<1, b_remain, 0, stream2>>> (encoder.data, encoder.data_size, bits, secret_size, d_sub_g, secret_size - remain - b_remain);
-    embed<<<dimGrid, dimBlock>>> (encoder.data, encoder.data_size, bits, secret_size-remain-b_remain, d_sub_g, 0);
-    embed<<<1, b_remain>>> (encoder.data, encoder.data_size, bits, secret_size, d_sub_g, secret_size - remain - b_remain);
-    remain_embed(encoder.data, encoder.data_size, bits, secret_size, host_sub_g);
-    cudaMemcpy(encoder.data, data_cu, encoder.data_size-remain, cudaMemcpyDeviceToHost);
+    for(int n=0; n<10; n++)
+	printf("%d ",encoder.data[n]);
+    printf("\n");
+//embed<<<1, b_remain, 0, stream2>>> (encoder.data, encoder.data_size, bits, secret_size, d_sub_g, secret_size - remain - b_remain);
+    embed<<<1, dimBlock>>> (data_cu, encoder.data_size, secret_cu, secret_size-remain-b_remain, d_sub_g, 0);
+    //embed<<<1, b_remain>>> (data_cu, encoder.data_size, secret_cu, b_remain, d_sub_g, secret_size - remain - b_remain);
+    //remain_embed(encoder.data, encoder.data_size, bits, secret_size, host_sub_g);
+    cudaMemcpy(encoder.data, data_cu, encoder.height*encoder.width, cudaMemcpyDeviceToHost);
+    for(int n=0; n<10; n++)
+	printf("%d ",encoder.data[n]);
+    printf("\n");
     printf("\nAfter encode\n");
     OutputFile("photo/encode.bmp", &encoder);
     free(bits);
@@ -59,6 +66,7 @@ int main(int argc, char* argv[])
     ReadFile("photo/encode.bmp", &decoder);
     char* message = (char*)malloc((secret_size/8)*sizeof(char)+1);
     decode(decoder.data, secret_size, message);
+    printf("end\n");
     printf("message = %s\n", message);
 
     // output txt file
