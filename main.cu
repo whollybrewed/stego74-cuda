@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     ReadFile("photo/fruit.bmp", &encoder);
     
     // read message from txt file
-    int secret_size = (encoder.width*encoder.height-1)*8;
+    int secret_size = (encoder.width*encoder.height-1);
     char* string = (char*)malloc((encoder.width*encoder.height-1)*sizeof(unsigned char)+1);
     ReadTxt(argv[1], string, encoder.width*encoder.height-1);
 
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	printf("%d ",encoder.data[n]);
     printf("\n");
 //embed<<<1, b_remain, 0, stream2>>> (encoder.data, encoder.data_size, bits, secret_size, d_sub_g, secret_size - remain - b_remain);
-    embed<<<1, dimBlock>>> (data_cu, encoder.data_size, secret_cu, secret_size-remain-b_remain, d_sub_g, 0);
+    embed<<<dimGrid, dimBlock>>> (data_cu, encoder.data_size, secret_cu, secret_size-remain-b_remain, d_sub_g, 0);
     //embed<<<1, b_remain>>> (data_cu, encoder.data_size, secret_cu, b_remain, d_sub_g, secret_size - remain - b_remain);
     //remain_embed(encoder.data, encoder.data_size, bits, secret_size, host_sub_g);
     cudaMemcpy(encoder.data, data_cu, encoder.height*encoder.width, cudaMemcpyDeviceToHost);
