@@ -8,6 +8,7 @@ __global__ void embed(unsigned char *data, const int data_size, unsigned char *s
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int start_pos = start + (threadId/7)*7;
     int stride = blockDim.x * gridDim.x;
+    //printf("s pos: %d\n",start_pos);
     //printf("%d %d\n",blockDim.x, gridDim.x);
     for (int n=0; n < num_secret/stride; n++) {
 	int i = threadId%7;
