@@ -1,30 +1,20 @@
 #include "embed.h"
 #include "grouping.h"
 
-void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* temp_sub_g)
+__global__ void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* sub_g, int start)
 {
-    cosets sub_g[16][8]; 
-
-    for (int i = 0; i < 16; i++){
-        for (int j = 0; j < 8; j++){
-            for (int k = 0; k < 7; k++){
-                sub_g[i][j].bit[k] = temp_sub_g[i * 8 + j].bit[k];
-            }
-        }
-    }
-
-    unsigned char pixcel_mask = 0;
-    unsigned char data_mask = 255;
+    printf("hello\n");
     unsigned char temp[7];
-    //const int num_secret = height * width - 1;
-    const uint8_t remain = (num_secret) % 7;
-    uint8_t u, v; 
-    int count = 0;
-
-    while (count < num_secret - remain){
-        for (uint8_t i = 0; i < 7; i++){
-            temp[i] = secrets[i + count];   
-        }
+    uint8_t u=0, v=0; 
+    int threadId = blockIdx.x * blockDim.x + threadIdx.x;
+    int count = start+threadId/7;
+    int start_pos = start + threadId;
+    int stride = blockDim.x * gridDim.x;
+    printf("hello3\n");
+    for (int n=0; n < num_secret/stride; n++) {
+	uint8_t i = threadId%7;
+        temp[i] = secrets[count+i];   
+	__syncthreads();
         u = temp[2] * 8
           + temp[4] * 4
           + temp[5] * 2
@@ -33,17 +23,25 @@ void embed(unsigned char *data, const int data_size, unsigned char *secrets, con
         v = temp[0] * 4
           + temp[1] * 2
           + temp[3] * 1;
-        for (uint8_t i = 0; i < 7; i++){
-            if (sub_g[u][v].bit[i] == 1){
-                data[i + count] |= (unsigned char)1; //0b00000001
-            }
-            else{
-                data[i + count] &= (unsigned char)254; //0b11111110
-            }
+    	printf("hello2\n");
+        if (sub_g[u*8+v].bit[i] == 1){
+            data[i + start_pos] |= (unsigned char)1; //0b00000001
         }
-        count += 7;
+        else{
+            data[i + start_pos] &= (unsigned char)254; //0b11111110
+        }
+        start_pos += stride;
     }
-    // dealing with the remainder secrect bits
+    printf("%d %d %d\n", threadId, u, v);
+}
+
+__host__ void remain_embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* sub_g)
+{
+    unsigned char pixcel_mask = 0;
+    const uint8_t remain = (num_secret) % 7;
+    unsigned char data_mask = 255;
+    unsigned char temp[7];
+    uint8_t u, v; 
     for (uint8_t i = 0; i < 7; i++){
         temp[i] = 0;
         if (i < remain){
@@ -60,7 +58,7 @@ void embed(unsigned char *data, const int data_size, unsigned char *secrets, con
       + temp[3] * 1;
       
     for (uint8_t i = 0; i < remain; i++){
-        if (sub_g[u][v].bit[i] == 1){
+        if (sub_g[u*8+v].bit[i] == 1){
             data[i + num_secret - remain] |= (unsigned char)1; //0b0000001
         }
         else{
@@ -69,7 +67,7 @@ void embed(unsigned char *data, const int data_size, unsigned char *secrets, con
     }
     // extra n bits replace the smallest n bits of the last pixel 
     for (uint8_t i = remain; i < 7; i++){
-        pixcel_mask |= sub_g[u][v].bit[i];
+        pixcel_mask |= sub_g[u*8+v].bit[i];
         if (i < 6){
             pixcel_mask <<= 1;
         }
@@ -77,4 +75,5 @@ void embed(unsigned char *data, const int data_size, unsigned char *secrets, con
     }
     data[num_secret] &= data_mask;
     data[num_secret] |= pixcel_mask;
+
 }
