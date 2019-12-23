@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
     // bmp reader
     struct BmpParser encoder;
-    ReadFile("photo/fruit.bmp", &encoder);
+    ReadFile("photo/man.bmp", &encoder);
     
     // read message from txt file
     int secret_size = (encoder.width*encoder.height-1)*8;
