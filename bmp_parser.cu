@@ -46,6 +46,8 @@ void ReadTxt(char* filename, char* string, int size)
     file = fopen(filename, "r");
     if (file) {
         while (fgets(tmp, size, file) != NULL) {
+            size -= strlen(tmp);
+            if (size == 0 || strlen(tmp) == 0) break;
             strncat(string,tmp,10000);
         }
         fclose(file);

@@ -8,17 +8,17 @@ int main(int argc, char* argv[])
 {
     // bmp reader
     struct BmpParser encoder;
-    ReadFile("photo/fruit.bmp", &encoder);
+    ReadFile(argv[2], &encoder);
     
     // read message from txt file
     int secret_size = (encoder.width*encoder.height-1);
-    char* string = (char*)malloc((encoder.width*encoder.height-1)*sizeof(unsigned char)+1);
-    ReadTxt(argv[1], string, encoder.width*encoder.height-1);
-    	printf("%s",string);
+    int string_size = secret_size/8;
+    char* string = (char*)malloc(string_size*sizeof(unsigned char)+1);
+    ReadTxt(argv[1], string, string_size);
     // stego encoder
     unsigned char* bits = (unsigned char*)malloc(secret_size*sizeof(unsigned char));
     StringToBits(string, bits);
-
+    printf("After String to bit\n");
     cosets *d_sub_g;
     cosets host_sub_g[128];
     dim3 BlockSize(128);
