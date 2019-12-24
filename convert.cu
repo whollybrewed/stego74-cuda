@@ -15,7 +15,7 @@ void BitsToString(unsigned char* bits, int bits_size, char* string)
 void StringToBits(char* string, unsigned char* bits)
 {
     for (int n = 0; n < strlen(string); n++){
-        int tmp = string[n];
+        unsigned int tmp = string[n];
         for (int j = 7; j >= 0; j--){
             bits[8*n+j] = tmp%2;
             tmp = tmp >> 1;

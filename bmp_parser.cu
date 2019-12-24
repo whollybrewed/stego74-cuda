@@ -15,11 +15,10 @@ int ReadFile(char* filename, struct BmpParser* parser)
     printf("offset = %d, w = %d, h = %d, p = %d\n", data_offset, parser->width, parser->height, plane);
     parser->palette_size = data_offset-54;
     if ( parser->palette_size ) {
-        printf("Palatte\n");
         parser->palette = (unsigned char*) malloc(parser->palette_size); 
         fread(parser->palette, sizeof(unsigned char), parser->palette_size, f);
     }
-    int size = plane * parser->width * parser->height;
+    int size = parser->width * parser->height;
     parser->data_size = size;
     parser->data = (unsigned char*) malloc(size*sizeof(unsigned char)); 
     fread(parser->data, sizeof(unsigned char), size, f); // read the rest of the data at once
@@ -46,6 +45,8 @@ void ReadTxt(char* filename, char* string, int size)
     file = fopen(filename, "r");
     if (file) {
         while (fgets(tmp, size, file) != NULL) {
+            size -= strlen(tmp);
+            if (size == 0 || strlen(tmp) == 0) break;
             strncat(string,tmp,10000);
         }
         fclose(file);
@@ -61,3 +62,4 @@ void OutputTxt(char* filename, char* string)
         fclose(file);
     }
 }
+
