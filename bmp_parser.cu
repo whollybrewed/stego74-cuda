@@ -15,7 +15,6 @@ int ReadFile(char* filename, struct BmpParser* parser)
     printf("offset = %d, w = %d, h = %d, p = %d\n", data_offset, parser->width, parser->height, plane);
     parser->palette_size = data_offset-54;
     if ( parser->palette_size ) {
-        printf("Palatte\n");
         parser->palette = (unsigned char*) malloc(parser->palette_size); 
         fread(parser->palette, sizeof(unsigned char), parser->palette_size, f);
     }
