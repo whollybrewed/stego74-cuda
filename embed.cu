@@ -33,6 +33,7 @@ __global__ void embed(unsigned char *data,
             data[i + start_pos] &= (unsigned char)254; //0b11111110
         }
         __syncthreads();
+		//printf("emb_num = %d\n", i + start_pos);
         start_pos += stride;
     }
 }

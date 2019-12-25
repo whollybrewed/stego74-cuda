@@ -34,18 +34,16 @@ int main(int argc, char* argv[])
     int b_remain = (secret_size-remain)%tile_width;
     dim3 dimBlock(tile_width);
     dim3 dimGrid(secret_size/tile_width);
-    printf("secret size + %d\n",secret_size);
-    cudaMalloc((void**)&data_cu, secret_size+1);
+    cudaMalloc((void**)&data_cu, secret_size + 1);
     cudaMalloc((void**)&secret_cu, secret_size);
-    printf("size: %d\n",encoder.width*encoder.height);
     cudaMemcpy(data_cu, encoder.data, encoder.width*encoder.height, cudaMemcpyHostToDevice);
     cudaMemcpy(secret_cu, bits, secret_size, cudaMemcpyHostToDevice);
     cudaStream_t stream1, stream2;
     cudaStreamCreate(&stream1);
     cudaStreamCreate(&stream2);
-    printf("Embedding...\n");
+    printf("Embedding...");
     embed<<<dimGrid, dimBlock,0,stream1>>>
-        (data_cu, encoder.data_size, secret_cu, secret_size-remain-b_remain, d_sub_g, 0);
+        (data_cu, encoder.data_size, secret_cu, secret_size - remain - b_remain, d_sub_g, 0);
     embed<<<1, b_remain,0,stream2>>>
         (data_cu, encoder.data_size, secret_cu, b_remain, d_sub_g, secret_size - remain - b_remain);
     cudaMemcpy(encoder.data, data_cu, encoder.height*encoder.width, cudaMemcpyDeviceToHost);
@@ -67,6 +65,7 @@ int main(int argc, char* argv[])
     OutputTxt("message.txt", message);
     printf("Output decoded message\n");
     printf("secrets character count: %d\n", strlen(message));
+	printf("==========================================================\n\n");
     free(message);
     return 0;
 }
