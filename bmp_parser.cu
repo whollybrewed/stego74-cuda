@@ -12,7 +12,7 @@ int ReadFile(char* filename, struct BmpParser* parser)
         printf("Compress!! Can not encode\n\n");
         return 0;
     }
-    printf("offset = %d, w = %d, h = %d, p = %d\n", data_offset, parser->width, parser->height, plane);
+    //printf("offset = %d, w = %d, h = %d, p = %d\n", data_offset, parser->width, parser->height, plane);
     parser->palette_size = data_offset-54;
     if ( parser->palette_size ) {
         parser->palette = (unsigned char*) malloc(parser->palette_size); 

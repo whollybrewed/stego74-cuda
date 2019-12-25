@@ -9,30 +9,26 @@ __global__ void decodekernel(unsigned char *dp, unsigned char *dl, unsigned char
 {
    	unsigned char matrix_h[3][7] =
  	{
-  	 {1, 1, 0, 1, 1, 0, 0},
-  	 {1, 0, 1, 1, 0, 1, 0},
-  	 {0, 1, 1, 1, 0, 0, 1}
+          {1, 1, 0, 1, 1, 0, 0},
+          {1, 0, 1, 1, 0, 1, 0},
+          {0, 1, 1, 1, 0, 0, 1}
  	};
 	int i;
    	int tx = blockIdx.x*blockDim.x+threadIdx.x;
-   	//int tx = threadIdx.x;
-   	//for(j=0; j<num_group; j++){
-                ds[tx*7] = 0;
-                ds[tx*7+1] = 0;
-                ds[tx*7+3] = 0;
-                for(i=0; i<7; i++){
-                        dl[tx*7+i] = dp[tx*7+i]&1;
-                        ds[tx*7] = ds[tx*7]^(matrix_h[0][i]*dl[tx*7+i]);
-                        ds[tx*7+1] = ds[tx*7+1]^(matrix_h[1][i]*dl[tx*7+i]);
-                        ds[tx*7+3] = ds[tx*7+3]^(matrix_h[2][i]*dl[tx*7+i]);
-                }
-                ds[tx*7+2] = dl[tx*7+2];
-                ds[tx*7+4] = dl[tx*7+4];
-                ds[tx*7+5] = dl[tx*7+5];
-                ds[tx*7+6] = dl[tx*7+6];
-        //}
+        ds[tx*7] = 0;
+        ds[tx*7+1] = 0;
+        ds[tx*7+3] = 0;
+        for(i=0; i<7; i++){
+                dl[tx*7+i] = dp[tx*7+i]&1;
+                ds[tx*7] = ds[tx*7]^(matrix_h[0][i]*dl[tx*7+i]);
+                ds[tx*7+1] = ds[tx*7+1]^(matrix_h[1][i]*dl[tx*7+i]);
+                ds[tx*7+3] = ds[tx*7+3]^(matrix_h[2][i]*dl[tx*7+i]);
+        }
+        ds[tx*7+2] = dl[tx*7+2];
+        ds[tx*7+4] = dl[tx*7+4];
+        ds[tx*7+5] = dl[tx*7+5];
+        ds[tx*7+6] = dl[tx*7+6];
 }
-
 
 void decode(unsigned char *p, const int secret_size, char* message)
 {
@@ -61,28 +57,9 @@ void decode(unsigned char *p, const int secret_size, char* message)
         decodekernel<<<dimGrid, dimBlock>>>(dp, dl, ds);
         printf("Printing final results...\n");
         cudaMemcpy(s, ds, size, cudaMemcpyDeviceToHost);
-	//for(i=0;i<num_group*7;i++)
-          //    printf("%d ",s[i]);
 	cudaFree(dp);
 	cudaFree(dl);
         cudaFree(ds);
-
-        //HxL=z
-        /*for(j=0; j<num_group; j++){
-		s[j*7] = 0;
-		s[j*7+1] = 0;
-		s[j*7+3] = 0;
-                for(i=0; i<7; i++){
-			l[j*7+i] = p[j*7+i]&1;
-                        s[j*7] = s[j*7]^(matrix_h[0][i]*l[j*7+i]);
-                        s[j*7+1] = s[j*7+1]^(matrix_h[1][i]*l[j*7+i]);
-                        s[j*7+3] = s[j*7+3]^(matrix_h[2][i]*l[j*7+i]);
-                }
-                s[j*7+2] = l[j*7+2];
-                s[j*7+4] = l[j*7+4];
-                s[j*7+5] = l[j*7+5];
-                s[j*7+6] = l[j*7+6];
-        }*/
         //deal with the remainder
         if(remain>0){
 		for(j=num_group*7; j<num_secret; j++)
