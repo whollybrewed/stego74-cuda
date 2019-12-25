@@ -1,8 +1,10 @@
 #include "embed.h"
 #include "grouping.h"
 
-__global__ void embed(unsigned char *data, const int data_size, const int num_secret, cosets* sub_g, int start)
+__global__ void embed(unsigned char *data, const int data_size, const int num_secret, cosets* sub_g, int start, cudaTextureObject_t tex)
 {
+	
+	
     __shared__ unsigned char temp[32][7];
     int u=0, v=0; 
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
@@ -11,7 +13,7 @@ __global__ void embed(unsigned char *data, const int data_size, const int num_se
     for (int n=0; n < num_secret/stride; n++) {
         int i = threadId%7;
         int small_thread = (threadId%blockDim.x)/7;
-        temp[small_thread][i] = tex1Dfetch(d_tex, start_pos + i);   
+        temp[small_thread][i] = tex1Dfetch<unsigned char>(tex, start_pos + i);
         __syncthreads();
         u = temp[small_thread][2] * 8
           + temp[small_thread][4] * 4
@@ -31,6 +33,7 @@ __global__ void embed(unsigned char *data, const int data_size, const int num_se
         __syncthreads();
         start_pos += stride;
     }
+	
 }
 
 __host__ void remain_embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* sub_g)
