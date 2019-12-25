@@ -8,7 +8,6 @@ void decode(unsigned char *p, const int secret_size, char* message)
         const int num_secret = secret_size;
         const int num_group = (secret_size)/7;
         const int remain = (secret_size) % 7;
-        //int p[7]={14,14,13,13,14,15,15};  //pixels
         unsigned char l[num_secret-remain+7];  //LSB
         unsigned char s[num_secret-remain+7];  //secret bits
         unsigned char z[num_group*3+3];  //syndrome
