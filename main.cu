@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
     cudaMalloc((void**)&d_sub_g, sub_g_size);
     grouping<<<GridSize, BlockSize>>>(d_sub_g);
     cudaMemcpy(host_sub_g, d_sub_g, sub_g_size, cudaMemcpyDeviceToHost);
-    //cudaBindTexture(0, d_tex, d_sub_g, sub_g_size);
-    //texture <cosets, 1, cudaReadModeElementType> d_tex;
+    
+    texture <unsigned char, 1, cudaReadModeElementType> d_tex;
     unsigned char *data_cu, *secret_cu;
     int tile_width = 224;
     int remain = secret_size % 7;
@@ -41,14 +41,15 @@ int main(int argc, char* argv[])
     printf("size: %d\n",encoder.width*encoder.height);
     cudaMemcpy(data_cu, encoder.data, encoder.width*encoder.height, cudaMemcpyHostToDevice);
     cudaMemcpy(secret_cu, bits, secret_size, cudaMemcpyHostToDevice);
+    cudaBindTexture(0, d_tex, secret_cu, secret_size);
     cudaStream_t stream1, stream2;
     cudaStreamCreate(&stream1);
     cudaStreamCreate(&stream2);
     for(int n=0; n<10; n++)
 	printf("%d ",encoder.data[n]);
     printf("\n");
-    embed<<<dimGrid, dimBlock,0,stream1>>> (data_cu, encoder.data_size, secret_cu, secret_size-remain-b_remain, d_sub_g, 0);
-    embed<<<1, b_remain,0,stream2>>> (data_cu, encoder.data_size, secret_cu, b_remain, d_sub_g, secret_size - remain - b_remain);
+    embed<<<dimGrid, dimBlock, 0, stream1>>> (data_cu, encoder.data_size, secret_size-remain-b_remain, d_sub_g, 0);
+    embed<<<1, b_remain, 0, stream2>>> (data_cu, encoder.data_size, b_remain, d_sub_g, secret_size - remain - b_remain);
     //remain_embed(encoder.data, encoder.data_size, bits, secret_size, host_sub_g);
     cudaMemcpy(encoder.data, data_cu, encoder.height*encoder.width, cudaMemcpyDeviceToHost);
     //unsigned char* test = (unsigned char*)malloc(secret_size*sizeof(unsigned char));
@@ -63,6 +64,7 @@ int main(int argc, char* argv[])
     OutputFile("photo/encode.bmp", &encoder);
     free(bits);
     free(string);
+    cudaUnbindTexture(d_tex);
     cudaFree(data_cu);
     cudaFree(secret_cu);
     // stego decoder

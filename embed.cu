@@ -1,7 +1,7 @@
 #include "embed.h"
 #include "grouping.h"
 
-__global__ void embed(unsigned char *data, const int data_size, unsigned char *secrets, const int num_secret, cosets* sub_g, int start)
+__global__ void embed(unsigned char *data, const int data_size, const int num_secret, cosets* sub_g, int start)
 {
     __shared__ unsigned char temp[32][7];
     int u=0, v=0; 
@@ -9,25 +9,26 @@ __global__ void embed(unsigned char *data, const int data_size, unsigned char *s
     int start_pos = start + (threadId/7)*7;
     int stride = blockDim.x * gridDim.x;
     for (int n=0; n < num_secret/stride; n++) {
-	int i = threadId%7;
-	int small_thread = (threadId%blockDim.x)/7;
-        temp[small_thread][i] = secrets[start_pos+i];   
-	__syncthreads();
+        int i = threadId%7;
+        int small_thread = (threadId%blockDim.x)/7;
+        temp[small_thread][i] = tex1Dfetch(d_tex, start_pos + i);   
+        __syncthreads();
         u = temp[small_thread][2] * 8
           + temp[small_thread][4] * 4
           + temp[small_thread][5] * 2
           + temp[small_thread][6] * 1;
-          
+            
         v = temp[small_thread][0] * 4
           + temp[small_thread][1] * 2
           + temp[small_thread][3] * 1;
-	if (sub_g[u*8+v].bit[i] == 1){
-            data[i + start_pos] |= (unsigned char)1; //0b00000001
-        }
-        else{
-            data[i + start_pos] &= (unsigned char)254; //0b11111110
-        }
-	__syncthreads();
+
+        if (sub_g[u*8+v].bit[i] == 1){
+                data[i + start_pos] |= (unsigned char)1; //0b00000001
+            }
+            else{
+                data[i + start_pos] &= (unsigned char)254; //0b11111110
+            }
+        __syncthreads();
         start_pos += stride;
     }
 }
