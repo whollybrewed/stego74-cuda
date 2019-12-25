@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cuda_profiler_api.h>
 #include "bmp_parser.h"
 #include "embed.h"
 #include "decoder.h"
-
 int main(int argc, char* argv[])
 {
     // bmp reader
@@ -67,5 +67,6 @@ int main(int argc, char* argv[])
     printf("secrets character count: %d\n", strlen(message));
 	printf("==========================================================\n\n");
     free(message);
+	cudaProfilerStop();
     return 0;
 }
