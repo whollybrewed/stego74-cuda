@@ -49,7 +49,7 @@ void decode(unsigned char *p, const int secret_size, char* message)
         unsigned char l[num_secret-remain+7];  //LSB
         unsigned char s[num_secret-remain+7];  //secret bits
 	int size = num_group*7*sizeof(unsigned char);
-	int tilewid = 224;
+	int tilewid = 7;
 	unsigned char *dp, *dl, *ds;
         cudaMalloc(&dp, size);
         cudaMemcpy(dp, p, size, cudaMemcpyHostToDevice);
