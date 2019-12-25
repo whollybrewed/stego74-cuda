@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h> 
 #include "bmp_parser.h"
 #include "embed.h"
 #include "decoder.h"
@@ -45,9 +46,11 @@ int main(int argc, char* argv[])
     decode_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     OutputTxt("message.txt", message);
     printf("Output decoded message\n");
+	printf("secrets character count: %d\n", strlen(message));
     free(message);
-    printf("==================================================\n");
-    printf("embed time: %f ms\n", embed_time/1000);
-    printf("decode time: %f ms\n", decode_time/1000);
+    printf("****************************************************\n");
+    printf("embed time: %f ms\n", embed_time*1000);
+    printf("decode time: %f ms\n", decode_time*1000);
+    printf("====================================================\n\n");
     return 0;
 }
