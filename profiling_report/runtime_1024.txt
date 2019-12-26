@@ -1,0 +1,9 @@
+==28642== NVPROF is profiling process 28642, command: ./stego potter.txt photo/lena_gray1024.bmp
+==28642== Profiling application: ./stego potter.txt photo/lena_gray1024.bmp
+==28642== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   54.19%  718.41us         4  179.60us  175.55us  190.37us  [CUDA memcpy HtoD]
+                   26.20%  347.40us         2  173.70us  173.35us  174.05us  [CUDA memcpy DtoH]
+                   11.38%  150.91us         1  150.91us  150.91us  150.91us  decodekernel(unsigned char*, unsigned char*, unsigned char*)
+                    8.11%  107.52us         2  53.761us  4.4480us  103.07us  embed(unsigned char*, int, unsigned char*, int, subgroup*, int)
+                    0.12%  1.5680us         1  1.5680us  1.5680us  1.5680us  grouping(subgroup*)
