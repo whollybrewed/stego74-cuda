@@ -36,21 +36,23 @@ int main(int argc, char* argv[])
     dim3 dimGrid(secret_size/tile_width);
     cudaMalloc((void**)&data_cu, secret_size + 1);
     cudaMalloc((void**)&secret_cu, secret_size);
-    cudaMemcpy(data_cu, encoder.data, encoder.width*encoder.height, cudaMemcpyHostToDevice);
-    cudaMemcpy(secret_cu, bits, secret_size, cudaMemcpyHostToDevice);
     cudaStream_t stream1, stream2;
     cudaStreamCreate(&stream1);
     cudaStreamCreate(&stream2);
     printf("Embedding...");
-    embed<<<dimGrid, dimBlock,0,stream1>>>
+    cudaMemcpyAsync(data_cu, encoder.data, encoder.width*encoder.height, cudaMemcpyHostToDevice, stream1);
+    cudaMemcpyAsync(secret_cu, bits, secret_size, cudaMemcpyHostToDevice, stream1);
+    embed<<<dimGrid, dimBlock,0,stream2>>>
         (data_cu, encoder.data_size, secret_cu, secret_size - remain - b_remain, d_sub_g, 0);
-    embed<<<1, b_remain,0,stream2>>>
+    embed<<<1, b_remain,0,stream1>>>
         (data_cu, encoder.data_size, secret_cu, b_remain, d_sub_g, secret_size - remain - b_remain);
-    cudaMemcpy(encoder.data, data_cu, encoder.height*encoder.width, cudaMemcpyDeviceToHost);
+    cudaMemcpyAsync(encoder.data, data_cu, encoder.height * encoder.width, cudaMemcpyDeviceToHost, stream2);
     OutputFile("photo/encode.bmp", &encoder);
     printf("Output embedded image\n");
     free(bits);
     free(string);
+	cudaStreamDestroy(stream1);
+	cudaStreamDestroy(stream2);
     cudaFree(data_cu);
     cudaFree(secret_cu);
 
