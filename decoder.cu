@@ -48,9 +48,9 @@ void decode(unsigned char *p, const int secret_size, char* message)
 	int tilewid = 224;
 	unsigned char *dp, *dl, *ds;
 	cudaMalloc(&dp, size);
-	cudaMemcpy(dp, p, size, cudaMemcpyHostToDevice);
+	cudaMemcpyAsync(dp, p, size, cudaMemcpyHostToDevice);
 	cudaMalloc(&dl, size);
-	cudaMemcpy(dl, l, size, cudaMemcpyHostToDevice);
+	cudaMemcpyAsync(dl, l, size, cudaMemcpyHostToDevice);
 	cudaMalloc(&ds, size);
 	dim3 dimBlock(tilewid);
 	dim3 dimGrid(num_group/tilewid);
