@@ -1,0 +1,20 @@
+==28655== NVPROF is profiling process 28655, command: ./stego potter.txt photo/lena_gray256.bmp
+==28655== Profiling application: ./stego potter.txt photo/lena_gray256.bmp
+==28655== Profiling result:
+   Start  Duration            Grid Size      Block Size     Regs*    SSMem*    DSMem*      Size  Throughput  SrcMemType  DstMemType           Device   Context    Stream  Name
+356.08ms  1.5360us              (1 1 1)       (128 1 1)        16        0B        0B         -           -           -           -  GeForce GTX 106         1         7  grouping(subgroup*) [105]
+356.12ms  11.008us                    -               -         -         -         -  64.000KB  5.5446GB/s    Pageable      Device  GeForce GTX 106         1         7  [CUDA memcpy HtoD]
+356.15ms  9.0560us                    -               -         -         -         -  63.999KB  6.7396GB/s    Pageable      Device  GeForce GTX 106         1         7  [CUDA memcpy HtoD]
+356.19ms  8.3520us            (292 1 1)       (224 1 1)        32      224B        0B         -           -           -           -  GeForce GTX 106         1        14  embed(unsigned char*, int, unsigned char*, int, subgroup*, int) [119]
+356.20ms  1.6960us              (1 1 1)       (126 1 1)        32      224B        0B         -           -           -           -  GeForce GTX 106         1        15  embed(unsigned char*, int, unsigned char*, int, subgroup*, int) [127]
+356.21ms  11.168us                    -               -         -         -         -  64.000KB  5.4652GB/s      Device    Pageable  GeForce GTX 106         1         7  [CUDA memcpy DtoH]
+472.63ms  9.0890us                    -               -         -         -         -  63.998KB  6.7151GB/s    Pageable      Device  GeForce GTX 106         1         7  [CUDA memcpy HtoD]
+472.71ms  9.0880us                    -               -         -         -         -  63.998KB  6.7158GB/s    Pageable      Device  GeForce GTX 106         1         7  [CUDA memcpy HtoD]
+472.77ms  10.977us             (41 1 1)       (224 1 1)        13        0B        0B         -           -           -           -  GeForce GTX 106         1         7  decodekernel(unsigned char*, unsigned char*, unsigned char*) [140]
+472.81ms  11.200us                    -               -         -         -         -  63.998KB  5.4494GB/s      Device    Pageable  GeForce GTX 106         1         7  [CUDA memcpy DtoH]
+
+Regs: Number of registers used per CUDA thread. This number includes registers used internally by the CUDA driver and/or tools and can be more than what the compiler shows.
+SSMem: Static shared memory allocated per CUDA block.
+DSMem: Dynamic shared memory allocated per CUDA block.
+SrcMemType: The type of source memory accessed by memory operation/copy
+DstMemType: The type of destination memory accessed by memory operation/copy
