@@ -1,6 +1,2 @@
 # stego74-cuda
-- [X] 2019/12/16 Serial C++ code.					
-- [X] 2019/12/23 Parallel code with CUDA.			
-- [X] 2019/12/24 Refactoring & Analysis.			
-- [X] 2019/12/26 PPT slides.
-- [X] 2020/01/11 Final report.		    		
+We propose a GPU-based implementation of the (7,4) Hamming steganographic scheme. The scheme features in a high embedded payload with a trade-off of slightly lower visual quality. We further improve its throughput by applying parallel programming using CUDA. The loop-level and instruction-level parallelism are exploited in order to maximize the speedup. The result shows a considerable speedup compared to its original serial version. While increasing the input image size, the acceleration is still able to sustain.
